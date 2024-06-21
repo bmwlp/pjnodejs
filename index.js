@@ -34,8 +34,8 @@ app.get('/users/:id', (req, res) => {
 
 app.post('/regis', (req, res) => {
     connection.query(
-        'INSERT INTO `users` (`fname`, `lname`, `phone`, `email`, `password`, `avatar`) VALUES (?, ?, ?, ?, ?, ?)',
-        [req.body.fname, req.body.lname, req.body.username, req.body.password, req.body.avatar],
+        'INSERT INTO `users` (`fname`, `lname`, `phone`, `email`, `password`) VALUES (?, ?, ?, ?, ?)',
+        [req.body.fname, req.body.lname, req.body.username, req.body.password, req.body.phone],
          function (err, results, fields) {
             if (err) {
                 console.error('Error in POST /users:', err);
