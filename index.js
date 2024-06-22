@@ -34,7 +34,7 @@ app.get('/users/:id', (req, res) => {
 
 app.post('/regis', (req, res) => {
     connection.query(
-        'INSERT INTO `users` (`fname`, `lname`, `phone`, `email`, `password`) VALUES (?, ?, ?, ?, ?)',
+        'INSERT INTO `users` (`email`, `password`) VALUES (?,?)',
         [req.body.fname, req.body.lname, req.body.username, req.body.password, req.body.phone],
          function (err, results, fields) {
             if (err) {
@@ -46,6 +46,23 @@ app.post('/regis', (req, res) => {
         }
     )
 })
+
+//login
+app.post('/login', (req, res) => {
+    connection.execute(
+        'SELECT * FROM users WHERE username=? AND password=?',
+        [req.body.username,req.body.password],
+        function(err, results, fields) {
+            if (err) {
+                console.error('Error in POST /register:', err);
+                res.status(500).send('Error Login');
+            } else {
+                res.status(200).send(results);
+            }
+        }
+    );
+});
+
 
 app.put('/users', (req, res) => {
     connection.query(
@@ -67,6 +84,6 @@ app.delete('/users', (req, res) => {
     )
 })
 
-app.listen(process.env.PORT || 4001, () => {
+app.listen(process.env.PORT || 4003, () => {
     console.log('CORS-enabled web server listening on port 4000')
 })
