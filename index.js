@@ -50,8 +50,8 @@ app.post('/regis', (req, res) => {
 //login
 app.post('/login', (req, res) => {
     connection.execute(
-        'SELECT * FROM users WHERE username=? AND password=?',
-        [req.body.username,req.body.password],
+        'SELECT * FROM users WHERE email=? AND password=?',
+        [req.body.email,req.body.password],
         function(err, results, fields) {
             if (err) {
                 console.error('Error in POST /register:', err);
