@@ -47,21 +47,49 @@ app.post('/regis', (req, res) => {
     )
 })
 
-//login
+// Import bcrypt for password hashing
+const bcrypt = require('bcrypt');
+
+// Adjust the login route
 app.post('/login', (req, res) => {
+    const { email, password } = req.body;
+
+    // Query the user by email
     connection.execute(
-        'SELECT * FROM users WHERE email=? AND password=?',
-        [req.body.email,req.body.password],
-        function(err, results, fields) {
+        'SELECT * FROM users WHERE email = ?',
+        [email],
+        async function(err, results, fields) {
             if (err) {
-                console.error('Error in POST /register:', err);
+                console.error('Error in POST /login:', err);
                 res.status(500).send('Error Login');
+            } else if (results.length === 0) {
+                // If no user found
+                res.status(401).send('Invalid email or password');
             } else {
-                res.status(200).send(results);
+                const user = results[0];
+                try {
+                    // Compare the provided password with the hashed password
+                    const match = await bcrypt.compare(password, user.password);
+                    if (match) {
+                        // Send back the user data except the password
+                        res.status(200).json({
+                            email: user.email,
+                            fname: user.fname,
+                            lname: user.lname,
+                            // Add other user details as needed
+                        });
+                    } else {
+                        res.status(401).send('Invalid email or password');
+                    }
+                } catch (bcryptError) {
+                    console.error('Error comparing passwords:', bcryptError);
+                    res.status(500).send('Error Login');
+                }
             }
         }
     );
 });
+
 
 
 app.put('/users', (req, res) => {
