@@ -84,6 +84,6 @@ app.delete('/users', (req, res) => {
     )
 })
 
-app.listen(process.env.PORT || 3008, () => {
+app.listen(process.env.PORT || 3009, () => {
     console.log('CORS-enabled web server listening on port 4000')
 })
