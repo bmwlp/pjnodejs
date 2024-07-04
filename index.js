@@ -84,6 +84,17 @@ app.delete('/users', (req, res) => {
     )
 })
 
+
+app.get('/models', (req, res) => {
+    connection.query(
+        'SELECT * FROM information',
+        function (err, results, fields) {
+            res.send(results)
+        }
+    )
+})
+
+
 app.listen(process.env.PORT || 3009, () => {
     console.log('CORS-enabled web server listening on port 4000')
 })
