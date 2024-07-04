@@ -87,7 +87,7 @@ app.delete('/users', (req, res) => {
 
 app.get('/information', (req, res) => {
     connection.query(
-        'SELECT * FROM info',
+        'SELECT * FROM infor',
         function (err, results, fields) {
             res.send(results)
         }
@@ -95,6 +95,6 @@ app.get('/information', (req, res) => {
 })
 
 
-app.listen(process.env.PORT || 3007, () => {
+app.listen(process.env.PORT || 3006, () => {
     console.log('CORS-enabled web server listening on port 4000')
 })
