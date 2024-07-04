@@ -85,7 +85,7 @@ app.delete('/users', (req, res) => {
 })
 
 
-app.get('/models', (req, res) => {
+app.get('/information', (req, res) => {
     connection.query(
         'SELECT * FROM information',
         function (err, results, fields) {
