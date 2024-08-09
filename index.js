@@ -49,20 +49,29 @@ app.post('/regis', (req, res) => {
 
 //login
 app.post('/login', (req, res) => {
-    connection.execute(
-        'SELECT * FROM users WHERE email=? AND password=?',
-        [req.body.email,req.body.password],
-        function(err, results, fields) {
-            if (err) {
-                console.error('Error in POST /register:', err);
-                res.status(500).send('Error Login');
-            } else {
-                res.status(200).send(results);
-            }
-        }
-    );
-});
+  const { email, password } = req.body;
 
+  // ตรวจสอบว่ามีการส่ง email และ password มาหรือไม่
+  if (!email || !password) {
+    return res.status(400).send('Email and password are required');
+  }
+
+  const query = 'SELECT * FROM users WHERE email = ? AND password = ?';
+  connection.execute(query, [email, password], (err, results) => {
+    if (err) {
+      console.error('Error executing query:', err);
+      return res.status(500).send('Internal Server Error');
+    }
+
+    if (results.length > 0) {
+      // ถ้าพบผู้ใช้ที่มี email และ password ตรงกับในฐานข้อมูล
+      res.status(200).json({ success: true, message: 'Login successful', user: results[0] });
+    } else {
+      // ถ้าไม่พบผู้ใช้
+      res.status(401).json({ success: false, message: 'Invalid email or password' });
+    }
+  });
+});
 
 app.put('/users', (req, res) => {
     connection.query(
@@ -95,6 +104,6 @@ app.get('/information', (req, res) => {
 })
 
 
-app.listen(process.env.PORT || 3001, () => {
-    console.log('CORS-enabled web server listening on port 3001')
+app.listen(process.env.PORT || 3000, () => {
+    console.log('CORS-enabled web server listening on port 3000')
 })
