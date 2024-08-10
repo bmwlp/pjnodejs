@@ -108,6 +108,6 @@ app.get('/information', (req, res) => {
 })
 
 
-app.listen(process.env.PORT || 3001, () => {
+app.listen(process.env.PORT || 3002, () => {
     console.log('CORS-enabled web server listening on port 3001')
 })
