@@ -48,20 +48,34 @@ app.post('/regis', (req, res) => {
 })
 
 //login
-app.post('/login', (req, res) => {
+app.post('/login', function(req, res) {
+    const email = req.body.email || null; // กำหนดค่าเป็น null ถ้า undefined
+    const password = req.body.password || null; // กำหนดค่าเป็น null ถ้า undefined
+  
+    if (email === null || password === null) {
+      res.status(400).json({ success: false, message: "Email or Password cannot be null" });
+      return;
+    }
+  
     connection.execute(
-        'SELECT * FROM users WHERE email=? AND password=?',
-        [req.body.email,req.body.password],
-        function(err, results, fields) {
-            if (err) {
-                console.error('Error in POST /register:', err);
-                res.status(500).send('Error Login');
-            } else {
-                res.status(200).send(results);
-            }
+      'SELECT * FROM users WHERE email = ? AND password = ?',
+      [email, password],
+      function(err, results, fields) {
+        if (err) {
+          console.error('Error:', err);
+          res.status(500).json({ success: false, message: "Database query failed" });
+          return;
         }
+  
+        if (results.length > 0) {
+          res.status(200).json({ success: true, data: results });
+        } else {
+          res.status(401).json({ success: false, message: "Invalid email or password" });
+        }
+      }
     );
-});
+  });
+  
 
 app.put('/users', (req, res) => {
     connection.query(
